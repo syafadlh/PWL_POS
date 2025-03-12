@@ -1,14 +1,15 @@
 @extends('adminlte::page')
 
 {{-- Extend and customize the browser title --}}
-
 @section('title')
     {{ config('adminlte.title') }}
     @hasSection('subtitle') | @yield('subtitle') @endif
 @stop
 
-{{-- Extend and customize the page content header --}}
+{{-- Load Vite assets --}}
+@vite('resources/js/app.js')
 
+{{-- Extend and customize the page content header --}}
 @section('content_header')
     @hasSection('content_header_title')
         <h1 class="text-muted">
@@ -25,13 +26,11 @@
 @stop
 
 {{-- Rename section content to content_body --}}
-
 @section('content')
     @yield('content_body')
 @stop
 
 {{-- Create a common footer --}}
-
 @section('footer')
     <div class="float-right">
         Version: {{ config('app.version', '1.0.0') }}
@@ -45,31 +44,26 @@
 @stop
 
 {{-- Add common Javascript/Jquery code --}}
-
 @push('js')
-<script>
-
-    $(document).ready(function() {
-        // Add your common script logic here...
-    });
-
-</script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
 @endpush
 
+{{-- Ensure additional scripts are included --}}
+@stack('scripts')
+
 {{-- Add common CSS customizations --}}
-
 @push('css')
-<style type="text/css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
 
-    {{-- You can add AdminLTE customizations here --}}
-    /*
-    .card-header {
-        border-bottom: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-    */
-
-</style>
+    <style type="text/css">
+        /* You can add AdminLTE customizations here */
+        /*
+        .card-header {
+            border-bottom: none;
+        }
+        .card-title {
+            font-weight: 600;
+        }
+        */
+    </style>
 @endpush
