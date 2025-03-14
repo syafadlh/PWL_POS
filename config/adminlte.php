@@ -152,7 +152,7 @@ return [
     |
     */
 
-    'layout_topnav' => null,
+    'layout' => 'top-nav', 
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
@@ -375,6 +375,11 @@ return [
                     'url' => '#',
                 ],
             ],
+        ],
+        [
+            'text' => 'Manage Kategori',
+            'url'  => 'kategori',
+            'icon' => 'fas fa-list',
         ],
         ['header' => 'labels'],
         [

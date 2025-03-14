@@ -9,12 +9,26 @@
 {{-- Load Vite assets --}}
 @vite('resources/js/app.js')
 
+{{-- Navbar --}}
+@section('topnav_items')
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/') }}">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/kategori') }}">
+            <i class="fas fa-list"></i> Manage Kategori
+        </a>
+    </li>
+@stop
+
+
 {{-- Extend and customize the page content header --}}
 @section('content_header')
     @hasSection('content_header_title')
         <h1 class="text-muted">
             @yield('content_header_title')
-
             @hasSection('content_header_subtitle')
                 <small class="text-dark">
                     <i class="fas fa-xs fa-angle-right text-muted"></i>
@@ -54,16 +68,4 @@
 {{-- Add common CSS customizations --}}
 @push('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
-
-    <style type="text/css">
-        /* You can add AdminLTE customizations here */
-        /*
-        .card-header {
-            border-bottom: none;
-        }
-        .card-title {
-            font-weight: 600;
-        }
-        */
-    </style>
 @endpush
