@@ -22,9 +22,10 @@ Route::get('/', function () {
 Route::get('/level', [LevelController::class, 'index']);
 Route::get('/kategori', [KategoriController::class, 'index']);
 Route::get('/user', [UserController::class, 'index']);
-
-Route::get('/user/tambah', [UserController::class, 'tambah']);
-Route::get('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+Route::get('/user/tambah', [UserController::class, 'tambah'])->name('user.tambah');
+Route::post('/user/tambah', [UserController::class, 'tambah_simpan'])->name('user.tambah.simpan');
+// Route::get('/user/tambah', [UserController::class, 'tambah']);
+// Route::get('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
 Route::get('/user/ubah/{id}',[UserController::class, 'ubah']);
 Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
 Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
@@ -37,3 +38,6 @@ Route::put('/kategori/{id}', [KategoriController::class, 'update']);
 
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+Route::get('/level/tambah', [LevelController::class, 'tambah'])->name('level.tambah');
+Route::post('/level/tambah_simpan', [LevelController::class, 'tambah_simpan'])->name('level.tambah_simpan');

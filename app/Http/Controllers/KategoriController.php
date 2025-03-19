@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\KategoriModel;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\DataTables\KategoriDataTable;
-use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\RedirectResponse;
 
 class KategoriController extends Controller
 {
