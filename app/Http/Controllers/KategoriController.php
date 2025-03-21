@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\DataTables\KategoriDataTable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
 
 class KategoriController extends Controller
 {
@@ -15,16 +17,30 @@ class KategoriController extends Controller
         return $dataTable->render('kategori.index');
     }
 
-    public function create()
+    public function create():View
     {
         return view('kategori.create');
     }
-    public function store(Request $request)
-    {
-        KategoriModel::create([
-            'kategori_kode' => $request->kodekategori,
-            'kategori_nama' => $request->namaKategori,
-        ]);
+    public function store(Request $request): RedirectResponse{
+        
+        $validatedData = $request->validate([
+                'kategori_kode' => ['required', 'max:2'],
+                'kategori_nama' => ['required', 'min:3'],
+            ]);
+            $validatedData = $request->validateWithBag('post', [
+                    'kategori_kode' => ['required', 'max:2'],
+                    'kategori_nama' => ['required', 'min:3'],
+                ]);
+                $validated = $request->validate([
+                        'kategori_kode' => 'required',
+                        'kategori_nama' => 'required',
+                    ]) ;
+        
+        // JOBSHEET 6 - B No 6 
+        // $validate = $request->validate([
+        //     'kategori_kode' => 'bail|required|max:255',
+        //     'kategori_nama' => 'required|min:10',
+        // ]);
 
         return redirect('/kategori');
     }
