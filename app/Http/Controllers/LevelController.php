@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\LevelModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StorePostRequest;
+use Illuminate\Http\RedirectResponse;
 
 class LevelController extends Controller
 {
@@ -44,5 +46,10 @@ class LevelController extends Controller
         // Redirect ke halaman level
         return redirect()->route('level.tambah')->with('success', 'Level berhasil ditambahkan!');
     }
-
+    public function store(StorePostRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        // Simpan data ke database
+        return redirect('/levels')->with('success', 'Level berhasil ditambahkan.');
+    }
 }

@@ -19,7 +19,7 @@
                         <label for="kategori_kode">Kode Kategori</label>
                         <input type="text" class="form-control" id="kategori_kode" name="kategori_kode" placeholder="Kode Kategori">
                     </div>
-                    <input type="text" name="kategori_kode" class="@error('kategori_kode') is-invalid @enderror">
+                    {{-- <input type="text" name="kategori_kode" class="@error('kategori_kode') is-invalid @enderror"> --}}
                     @error('kategori_kode')
                         <div class="alert alert-danger">{{$message}}</div>
                     @enderror

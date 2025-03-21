@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\UserModel;
 use App\Models\LevelModel; // Tambahkan ini jika LevelModel digunakan
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\StorePostRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rule;
+
 
 class UserController extends Controller
 {
@@ -56,7 +60,10 @@ class UserController extends Controller
 
         // Validasi input
         $request->validate([
-            'username' => 'required|unique:m_user,username',
+            'username' => [
+                'required',
+                Rule::unique('m_user', 'username')->ignore($id, 'user_id'), // Abaikan username user ini sendiri
+            ],
             'nama' => 'required|string',
             'password' => 'nullable|min:6', // Password boleh kosong saat edit
             'level_id' => 'required|exists:m_level,level_id',
@@ -80,5 +87,10 @@ class UserController extends Controller
         $user->delete();
 
         return redirect('/user')->with('success', 'User berhasil dihapus!');
+    }
+    public function store(StorePostRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        return redirect('/users')->with('success', 'User berhasil ditambahkan.');
     }
 }
