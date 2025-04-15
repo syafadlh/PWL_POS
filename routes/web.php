@@ -45,3 +45,7 @@ Route::get('/level/tambah', [LevelController::class, 'tambah'])->name('level.tam
 Route::post('/level/tambah_simpan', [LevelController::class, 'tambah_simpan'])->name('level.tambah_simpan');
 
 Route::resource('m_user', POSController::class);
+
+//JS6 -PRAK1- route tambah data dengan ajax
+Route::get('/create_ajax', [UserController::class, 'create_ajax']); // Menampilkan halaman form tambah user Ajax
+Route::post('/ajax', [UserController::class, 'store_ajax']); // Menyimpan data user baru Ajax
