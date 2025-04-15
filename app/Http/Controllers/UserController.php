@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\LevelModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -130,7 +130,7 @@ class UserController extends Controller
             ]);
         }
 
-    // Menampilkan halaman form edit user
+        // Menampilkan halaman form edit user
     public function edit(string $id)
     {
         $user = UserModel::find($id);
@@ -196,6 +196,7 @@ class UserController extends Controller
         }
         }
 
+    //Jobsheet 6 
     public function create_ajax()
     {
         $level = LevelModel::select('level_id', 'level_nama')->get();
@@ -284,6 +285,33 @@ class UserController extends Controller
         }
     }
     // Redirect jika request tidak menggunakan AJAX
+    return redirect('/');
+    }
+    
+    public function confirm_ajax(string $id){
+        $user = UserModel::find($id);
+    
+        return view('user.confirm_ajax', ['user' => $user]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+    // cek apakah request dari ajax
+    if ($request->ajax() || $request->wantsJson()) {
+        $user = UserModel::find($id);
+        if ($user) {
+            $user->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil dihapus'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+    }
     return redirect('/');
     }
 }
