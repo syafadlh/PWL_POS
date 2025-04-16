@@ -58,7 +58,7 @@ class KategoriController extends Controller
             // menambahkan kolom index
             ->addIndexColumn()
             ->addColumn('aksi', function ($kategori) {
-                // $btn = '<a href="' . url('/kategori/' . $kategori->kategori_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<a href="' . url('/kategori/' . $kategori->kategori_id) . '" class="btn btn-info btn-sm">Detail</a> ';
                 // $btn .= '<a href="' . url('/kategori/' . $kategori->kategori_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
                 // $btn .= '<form class="d-inline-block" method="POST" action="' . url('/kategori/' . $kategori->kategori_id) . '">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
                 $btn = '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
@@ -216,6 +216,12 @@ class KategoriController extends Controller
         return view('kategori.edit_ajax', ['kategori' => $kategori]);
     }
 
+    //manampilkan detail kategori dgn ajax
+    public function show_ajax($id)
+    {
+        $kategori = KategoriModel::find($id);
+        return view('kategori.show_ajax', compact('kategori'));
+    }
 
     // menyimpan data kategori yang sudah diedit dgn ajax
     public function update_ajax(Request $request, string $id)

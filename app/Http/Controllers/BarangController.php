@@ -40,7 +40,7 @@ class BarangController extends Controller
         return DataTables::of($barangs)
             ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
             ->addColumn('aksi', function ($barang) { // menambahkan kolom aksi
-                // $btn = '<a href="' . url('/barang/' . $barang->barang_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<a href="' . url('/barang/' . $barang->barang_id) . '" class="btn btn-info btn-sm">Detail</a> ';
                 // $btn .= '<a href="' . url('/barang/' . $barang->barang_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
                 // $btn .= '<form class="d-inline-block" method="POST" action="' .url('/barang/' . $barang->barang_id) . '">'
                 //     . csrf_field() . method_field('DELETE') .
@@ -141,6 +141,13 @@ class BarangController extends Controller
             'page' => $page, 'barang' => $barang, 
             'kategori' => $kategori, 
             'activeMenu' => $activeMenu]);
+    }
+
+    //menampilkan detail barang dgn ajax
+    public function show_ajax(string $id)
+    {
+        $barang = BarangModel::with('kategori')->find($id);
+        return view('barang.show_ajax', ['barang' => $barang]);
     }
 
     // Menyimpan perubahan data barang

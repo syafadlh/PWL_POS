@@ -52,7 +52,7 @@ class LevelController extends Controller
         return DataTables::of($levels)
             ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
             ->addColumn('aksi', function ($level) { // menambahkan kolom aksi
-                // $btn = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> ';
                 // $btn .= '<a href="' . url('/level/' . $level->level_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
                 // $btn .= '<form class="d-inline-block" method="POST" action="' . url('/level/' . $level->level_id) . '">'
                 //     . csrf_field() . method_field('DELETE') .
@@ -83,7 +83,7 @@ class LevelController extends Controller
         return view('level.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'page' => $page]);
     }
   
-      // Menyimpan data level baru
+    // Menyimpan data level baru
     public function store(Request $request)
     {
         $request->validate([
@@ -115,7 +115,11 @@ class LevelController extends Controller
   
         $activeMenu = 'level';
   
-        return view('level.show', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'page' => $page, 'level' => $level]);
+        return view('level.show', [
+            'breadcrumb' => $breadcrumb, 
+            'activeMenu' => $activeMenu, 
+            'page' => $page, 
+            'level' => $level]);
     }
   
     // Menampilkan form edit level
@@ -207,7 +211,14 @@ class LevelController extends Controller
          return view('level.edit_ajax', ['level' => $level]);
  
      }
-
+    
+    //menampilkan detail level dgn ajax
+    public function show_ajax($id)
+    {
+        $level = LevelModel::find($id);
+        return view('level.show_ajax', compact('level'));
+    }
+      
     // menyimpan data level yang sudah diedit dgn ajax 
      public function update_ajax(Request $request, string $id)
     {
