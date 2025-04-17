@@ -7,12 +7,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\LevelController; 
 use App\Http\Controllers\KategoriController; 
-use App\Http\Controllers\BarangController; 
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\SupplierController; 
-use App\Http\Controllers\WelcomeController; 
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UserController; 
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthController; 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,11 +24,21 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+Route::get('/level', [LevelController::class, 'index']);
+ Route::get('/kategori', [KategoriController::class, 'index']);
+ Route::get('/user', [UserController::class, 'index']);
+ 
+ Route::get('/user/tambah', [UserController::class, 'tambah']);
+ Route::post('user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+ Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
+ Route::put('user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
+ Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+
 Route::pattern('id', '[0-9]+');
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
-Route::POST('logout', [AuthController::class, 'logout'])->name('logout');
+Route::POST('logout', [AuthController::class, 'logout'])->name('logout'); //ubah methodnya jadi POST
 
 Route::middleware(['auth'])->group(function () { //artinya semua route di dalam group ini harus login
     
@@ -42,7 +52,7 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
         Route::get('/create_ajax', [UserController::class, 'create_ajax']); // Form tambah user Ajax
         Route::post('/ajax', [UserController::class, 'store_ajax']); // Simpan user Ajax
         Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax']); // Form edit user Ajax
-        Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax']); // Update user Ajax
+        Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax']); // Updat   e user Ajax
         Route::get('/{id}', [UserController::class, 'show']); // Detail user
         Route::get('/{id}/edit', [UserController::class, 'edit']); // Form edit user
         Route::put('/{id}', [UserController::class, 'update']); // Update user
@@ -52,22 +62,24 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
         Route::delete('/{id}', [UserController::class, 'destroy']); // Hapus user
     });
 
-    Route::middleware(['authorize:ADM']) -> group (function() {
-        Route::get('/', [LevelController::class, 'index']);
-        Route::post("/list", [LevelController::class, 'list']);
-        Route::get('/create', [LevelController::class, 'create']);
-        Route::post('/', [LevelController::class, 'store']);
-        Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
-        Route::post('/ajax', [LevelController::class, 'store_ajax']);
-        Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
-        Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);
-        Route::get('/{id}', [LevelController::class, 'show']);
-        Route::get('/{id}/edit', [LevelController::class, 'edit']);
-        Route::put('/{id}', [LevelController::class, 'update']);
-        Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
-        Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
-        Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']); 
-        Route::delete('/{id}', [LevelController::class, 'destroy']);
+    Route::group(['prefix' => 'level'], function () {
+        Route::middleware(['authorize:ADM'])->group(function () {
+            Route::get('/', [LevelController::class, 'index']);
+            Route::post("/list", [LevelController::class, 'list']);
+            Route::get('/create', [LevelController::class, 'create']);
+            Route::post('/', [LevelController::class, 'store']);
+            Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
+            Route::post('/ajax', [LevelController::class, 'store_ajax']);
+            Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
+            Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);
+            Route::get('/{id}', [LevelController::class, 'show']);
+            Route::get('/{id}/edit', [LevelController::class, 'edit']);
+            Route::put('/{id}', [LevelController::class, 'update']);
+            Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
+            Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
+            Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']);
+            Route::delete('/{id}', [LevelController::class, 'destroy']);
+        });
     });
 
     Route::group(['prefix' => 'kategori'], function () {
@@ -84,7 +96,7 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
         Route::put('/{id}', [KategoriController::class, 'update']);
         Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
         Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
-        Route::get('/{id}/show_ajax', [KategoriController::class, 'show_ajax']); 
+        Route::get('/{id}/show_ajax', [KategoriController::class, 'show_ajax']);
         Route::delete('/{id}', [KategoriController::class, 'destroy']);
     });
 
