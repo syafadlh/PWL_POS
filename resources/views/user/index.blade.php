@@ -3,12 +3,11 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Daftar Pengguna</h3>
+        <h3 class="card-title">Daftar Pengguna yang terdaftar dalam sistem </h3>
         <div class="card-tools">
-            <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-info">Import Pengguna (.xlsx)</button>
-            <a href="{{ url('/user/export_excel') }}" class="btn btn-primary"><i class="fa fa-file- excel"></i> Export User (.xlsx)</a>
-            <a href="{{ url('/user/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file- pdf"></i> Export User (.pdf)</a>
-            <button onclick="modalAction('{{ url('/user/create_ajax') }}')" class="btn btn-success">Tambah Data</button>
+            <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-info">Import Pengguna</button>
+            <a href="{{ url('/user/create') }}" class="btn btn-primary">Tambah Data</a>
+            <button onclick="modalAction('{{ url('/user/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
         </div>
     </div>
     <div class="card-body">
@@ -31,7 +30,6 @@
             </div>
         </div>
         
-        <!-- Success/Error Messages -->
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -40,7 +38,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
         
-        <!-- Users Table -->
+        <!-- User Table -->
         <table class="table table-bordered table-sm table-striped table-hover" id="table-user">
             <thead>
                 <tr>
@@ -56,8 +54,6 @@
         </table>
     </div>
 </div>
-
-<!-- Modal for Import Form -->
 <div id="myModal" class="modal fade animate shake" tabindex="-1" data-backdrop="static" data-keyboard="false" data-width="75%"></div>
 @endsection 
 
