@@ -1,67 +1,88 @@
-<form action="{{ url('/kategori/import_ajax') }}" method="POST" id="form-import-kategori" enctype="multipart/form-data">
-    @csrf
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Import Data Kategori</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Download Template</label>
-                    <a href="{{ asset('template_kategori.xlsx') }}" class="btn btn-info btn-sm" download>
-                        <i class="fa fa-file-excel"></i> Download Template
-                    </a>
-                </div>
-                <div class="form-group">
-                    <label>Pilih File</label>
-                    <input type="file" name="file_kategori" id="file_kategori" class="form-control" required>
-                    <small id="error-file_kategori" class="error-text form-text text-danger"></small>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
-                <button type="submit" class="btn btn-primary">Upload</button>
-            </div>
+@extends('layouts.template')
+
+@section('content')
+<div class="card card-outline card-primary">
+    <div class="card-header">
+        <<h3 class="card-title">Daftar Kategori</h3>
+        <div class="card-tools">
+            <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-info">Import Kategori</button>
+                 <a href="{{ url('/Kategori/create') }}" class="btn btn-primary">Tambah Data</a>
+            <button onclick="modalAction('{{ url('/kategori/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
         </div>
     </div>
-</form>
 
-<script>
-$(document).ready(function() {
-    $("#form-import-kategori").validate({
-        rules: {
-            file_kategori: {
-                required: true,
-                extension: "xlsx"
-            }
-        },
-        submitHandler: function(form) {
-            var formData = new FormData(form);
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.status) {
-                        $('#myModal').modal('hide');
-                        Swal.fire('Berhasil', response.message, 'success');
-                        tableKategori.ajax.reload();
-                    } else {
-                        $('.error-text').text('');
-                        $.each(response.msgField, function(prefix, val) {
-                            $('#error-' + prefix).text(val[0]);
-                        });
-                        Swal.fire('Terjadi Kesalahan', response.message, 'error');
+    <div class="card-body">
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <div id="filter" class="form-horizontal filter-date p-2 border-bottom mb-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-group-sm row text-sm mb-0">
+                        <label for="filter_kategori" class="col-md-1 col-form-label">Filter</label>
+                        <div class="col-md-3">
+                            <select name="filter_kategori" class="form-control form-control-sm filter_kategori">
+                                <option value="">- Semua -</option>
+                                @foreach($kategori as $l)
+                                    <option value="{{ $l->kategori_id }}">{{ $l->kategori_nama }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Kategori Barang</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <table class="table table-bordered table-hover table-sm" id="table_kategori">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Kode Kategori</th>
+                    <th>Nama Kategori</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" data-backdrop="static" data-keyboard="false" data-width="75%"></div>
+@endsection
+
+@push('js')
+    <script>
+         function modalAction(url = ''){
+            $('#myModal').load(url,function(){
+            $('#myModal').modal('show')
+        });
+    }
+        $(document).ready(function() {
+            var tableKategori = $('#table_kategori').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    "url": "{{ url('kategori/list') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": function (d) {
+                        d.filter_kategori = $('.filter_kategori').val();
                     }
-                }
+                },
+                columns: [
+                    { data: "DT_RowIndex", className: "text-center", orderable: false, searchable: false },
+                    { data: "kategori_kode", orderable: true, searchable: true },
+                    { data: "kategori_nama", orderable: true, searchable: true },
+                    { data: "aksi", className: "text-center", orderable: false, searchable: false }
+                ]
             });
-            return false;
-        }
-    });
-});
-</script>
+            
+            $('.filter_kategori').change(function() {
+                tableKategori.draw();
+            });
+        });
+    </script>
+@endpush
