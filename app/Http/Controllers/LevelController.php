@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class LevelController extends Controller
 {
@@ -264,14 +262,6 @@ class LevelController extends Controller
         }
         return redirect('/');
     }
-
-    // menampilkan form impor level 
-    public function import()
-    {
-        return view('level.import');
-    }
-
-    // mengimpor file excel 
     public function import_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
@@ -324,76 +314,5 @@ class LevelController extends Controller
         }
 
         return redirect('/');
-    }
-    public function export_excel()
-    {
-        // Ambil data barang yang akan diekspor
-        $levels = LevelModel::select('level_id', 'level_kode', 'level_nama')
-            ->orderBy('level_id')
-            ->get();
-
-        // Load library PhpSpreadsheet
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet(); //ambil sheet yg aktif 
-
-        // Set header kolom
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'ID Level');
-        $sheet->setCellValue('C1', 'Kode Level');
-        $sheet->setCellValue('D1', 'Nama Level');
-
-
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true); //bold header 
-
-        // Looping isi data barang 
-        $no = 1; //mulai dari nomor 1 
-        $baris = 2; //data dimulai dari baris ke 2 
-        foreach ($levels as $level) {
-            $sheet->setCellValue('A' . $baris, $no);
-            $sheet->setCellValue('B' . $baris, $level->level_id);
-            $sheet->setCellValue('C' . $baris, $level->level_kode);
-            $sheet->setCellValue('D' . $baris, $level->level_nama);
-            $baris++;
-            $no++;
-        }
-
-        // Set auto size untuk kolom
-        foreach (range('A', 'D') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setAutoSize(true);
-        }
-
-        $sheet->setTitle('Data Level');// set title sheet 
-
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-
-        $filename = 'Data_Level_' . date('Y-m-d_H-i-s') . '.xlsx'; //generate name file + with format date 
-
-        // Set header untuk download file
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-        header('Cache-Control: cache, must-revalidate');
-        header('Pragma: public');
-
-        $writer->save('php://output');
-        exit;
-    }
-
-    //Ekspor file pdf
-    public function export_pdf()
-    {
-        $level = LevelModel::select('level_id', 'level_kode', 'level_nama')
-            ->orderBy('level_id')
-            ->get();
- 
-        // use Barryvdh\DomPDF\Facade\Pdf;
-        $pdf = Pdf::loadView('level.export_pdf', ['level' => $level]);
-        $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
-        $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
-        $pdf->render();
- 
-        return $pdf->stream('Data Level ' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

@@ -3,18 +3,18 @@
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Import Data Level</h5>
+                <h5 class="modal-title">Import Data Level</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>Download Template</label>
                     <a href="{{ asset('template_level.xlsx') }}" class="btn btn-info btn-sm" download>
-                        <i class="fa fa-file-excel"></i>Download
+                        <i class="fa fa-file-excel"></i> Download
                     </a>
-                    <small id="error-level_id" class="error-text form-text text-danger"></small>
+                    <small id="error-kategori_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Pilih File</label>
@@ -31,58 +31,58 @@
 </form>
 
 <script>
-$(document).ready(function() {
-    // Validasi Form
-    $("#form-import-level").validate({
-        rules: {
-            file_level: {
-                required: true,
-                extension: "xlsx"
+    $(document).ready(function() {
+        $("#form-import-level").validate({
+            rules: {
+                file_level: {
+                    required: true,
+                    extension: "xlsx"
+                },
             },
-        },
-        submitHandler: function(form) {
-            var formData = new FormData(form); // Jadikan form ke FormData untuk menghandle file
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: formData, // Data yang dikirim berupa FormData
-                processData: false, // setting processData dan contentType ke false, untuk menghandle file
-                contentType: false,
-                success: function(response) {
-                    if(response.status) { // jika sukses
-                        $('#modal-master').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
-                        });
-                        tableLevel.ajax.reload(); // reload datatable (ganti sesuai table datamu)
-                    } else { // jika error
-                        $('.error-text').text('');
-                        $.each(response.msgField, function(prefix, val) {
-                            $('#error-'+prefix).text(val[0]);
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: response.message
-                        });
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if(response.status) {
+                            $('#myModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                            tableLevel.ajax.reload();
+                        } else {
+                            $('.error-text').text('');
+                            $.each(response.msgField, function(prefix, val) {
+                                $('#error-'+prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
                     }
-                }
-            });
-            return false;
-        },
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function(element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
     });
-});
 </script>
